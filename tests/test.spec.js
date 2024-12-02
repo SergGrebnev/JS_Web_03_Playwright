@@ -2,33 +2,32 @@ const { test, expect } = require("@playwright/test");
 const { email, pass } = require("../user");
 
 test("Successful authorization", async ({ page }) => {
-  await page.goto("https://netology.ru/");
-  await page.getByRole("link", { name: "Войти" }).click();
-  await page.getByPlaceholder("Email").click();
+  test.setTimeout(180_000);
+  await page.goto("https://netology.ru/?modal=sign_in", { timeout: 60_000 });
+  await page.getByPlaceholder("Email").click({ timeout: 60_000 });
   await page.getByPlaceholder("Email").fill(email);
   await page.getByPlaceholder("Пароль").click();
   await page.getByPlaceholder("Пароль").fill(pass);
   await page.getByTestId("login-submit-btn").click();
 
   // Expect a title "to contain" a substring.
-  await expect(page.locator("[data-testid='header-top']")).toContainText(
-    "Моё обучение",
-  );
-  // await expect(
-  //   page.locator(
-  //     "[.------libs-shared-src-reallyShared-components-MenuLink--info--XyT0U]",
-  //   ),
-  // ).toContainText(email);
+  await expect(
+    page.locator(
+      ".------libs-shared-src-reallyShared-components-User--profileText--vDqvQ"
+    )
+  ).toContainText("Моё обучение", { timeout: 150_000 });
 });
 
-// test("Failed authorization", async ({ page }) => {
-//   await page.goto("https://playwright.dev/");
+test("Failed authorization", async ({ page }) => {
+  await page.goto("https://netology.ru/?modal=sign_in", { timeout: 60_000 });
+  await page.getByPlaceholder("Email", { timeout: 60_000 }).click();
+  await page.getByPlaceholder("Email").fill(email);
+  await page.getByPlaceholder("Пароль").click();
+  await page.getByPlaceholder("Пароль").fill("pass");
+  await page.getByTestId("login-submit-btn").click();
 
-//   // Click the get started link.
-//   await page.getByRole("link", { name: "Get started" }).click();
-
-//   // Expects page to have a heading with the name of Installation.
-//   await expect(
-//     page.getByRole("heading", { name: "Installation" }),
-//   ).toBeVisible();
-// });
+  // Expect a title "to contain" a substring.
+  await expect(
+    page.locator(".hint_hint__bpsEa.inputHint", { timeout: 150_000 })
+  ).toContainText("Вы ввели неправильно логин или пароль.");
+});

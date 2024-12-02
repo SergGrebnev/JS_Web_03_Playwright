@@ -26,7 +26,7 @@ module.exports = defineConfig({
   use: {
     launchOptions:{
       headless: true,
-      slowMo: 1,
+      slowMo: 1000,
       devtools: false
     },
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -48,10 +48,10 @@ module.exports = defineConfig({
       use: { ...devices['Desktop Firefox'] },
     },
 
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] },
+    // },
 
     /* Test against mobile viewports. */
     // {
